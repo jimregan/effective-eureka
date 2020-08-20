@@ -8,7 +8,7 @@ if len(sys.argv) != 3:
     sys.exit()
 
 lat = open(file=sys.argv[1], mode="r", encoding="utf-8")
-out = open(file=sys.argv[2], mode="a", encoding="utf-8")
+output = open(file=sys.argv[2], mode="a", encoding="utf-8")
 for line in lat:
     if not ' ' in line.strip():
         continue
@@ -19,4 +19,4 @@ for line in lat:
         else:
             word = parts[2]
             toks = tokenizer.tokenize(word)
-            out.print("%s\t%s" % (word, " ".join(toks)))
+            output.write("%s\t%s\n" % (word, " ".join(toks)))
