@@ -41,21 +41,21 @@ sub final_vowel {
 	return 0;
 }
 
-sub check_lexicon {
-	my $text_a = shift;
-	my $text_b = shift;
-	if($speller->check($text_a) || $speller->check(ucfirst($text_a))) {
-		return 0;
-	}
-	my @sugg = $speller->suggest($text_a);
-	for my $sug (@sugg) {
-		if(lc($sug) eq $text_b) {
-			print "LEXICON_ERROR\t$text_a\t$text_b\n";
-			return 1;
-		}
-	}
-	return 0;
-}
+#sub check_lexicon {
+#	my $text_a = shift;
+#	my $text_b = shift;
+#	if($speller->check($text_a) || $speller->check(ucfirst($text_a))) {
+#		return 0;
+#	}
+#	my @sugg = $speller->suggest($text_a);
+#	for my $sug (@sugg) {
+#		if(lc($sug) eq $text_b) {
+#			print "LEXICON_ERROR\t$text_a\t$text_b\n";
+#			return 1;
+#		}
+#	}
+#	return 0;
+#}
 
 while(<>) {
 	chomp;
