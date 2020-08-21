@@ -113,23 +113,27 @@ sub printer {
 sub do_single_word {
 	my $word = shift;
 	my @ret = ();
-	push @ret, $word;
+	my @safe = ();
+	push @safe, $word;
 	if(exists $homophones{$word}) {
 		for my $i (@{$homophones{$word}}) {
-			push @ret, $i;
+			push @safe, $i;
 		}
 	}
 	if(exists $other_unspaced{$word}) {
 		for my $i (@{$other_unspaced{$word}}) {
-			push @ret, $i;
+			push @safe, $i;
 		}
 	}
+	push @ret, @safe;
+
+	my @unsafe = ();
 	for my $i (keys %vowel_swaps) {
 		if($word =~ /$i$/) {
 			my $base = $word;
 			$base =~ s/$i$//;
 			for my $j (@{$vowel_swaps{$i}}) {
-				push @ret, $base . $j;
+				push @unsafe, $base . $j;
 			}
 		}
 	}
@@ -137,22 +141,30 @@ sub do_single_word {
 		if($word =~ /$i$/) {
 			my $out = $word;
 			$out =~ s/$i$//;
-			push @ret, $out;
+			push @unsafe, $out;
 		}
 	}
 	for my $i (keys %added_pfx) {
 		if($word =~ /^$i/) {
 			my $out = $word;
 			$out =~ s/^$i//;
-			push @ret, $out;
+			push @unsafe, $out;
 		}
 	}
 	for my $i (keys %missing_sfx) {
-		push @ret, $word . $i;
+		push @unsafe, $word . $i;
 	}
 	for my $i (keys %missing_pfx) {
-		push @ret, $i .$word;
+		push @unsafe, $i .$word;
 	}
+	my %tmp = ();
+	for my $k (@unsafe) {
+		$tmp{$k} = 1;
+	}
+	print "PRE: $#ret\n";
+	@ret = keys %tmp;
+	print "POST: $#ret\n";
+	print Dumper(@ret) . "\n";
 	return @ret;
 }
 
