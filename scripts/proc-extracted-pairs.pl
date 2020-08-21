@@ -9,6 +9,8 @@ use Text::Aspell;
 my $speller = Text::Aspell->new;
 die unless $speller;
 $speller->set_option('lang', 'pl');
+use JSON;
+my $JSON = JSON->new;
 
 binmode(STDIN, ":utf8");
 binmode(STDOUT, ":utf8");
@@ -82,38 +84,6 @@ while(<DATA>) {
 
 }
 close(DATA);
-
-sub printer_inner {
-	my $id = shift;
-	my $arr = $_[0];
-	my $expand = $_[1];
-	my @buf = ();
-	if($#{$expand} < 0) {
-		for my $i (@$arr) {
-			print "$id $i\n";
-		}
-	} else {
-		my $cur = shift @$expand;
-		if($#$arr < 0) {
-			for my $i (@$cur) {
-				push @buf, $i;
-			}
-		} else {
-			for my $i (@$arr) {
-				for my $j (@$cur) {
-					push @buf, "$i $j";
-				}
-			}
-		}
-		printer_inner($id, \@buf, $expand);
-	}
-}
-
-sub printer {
-	my $id = shift;
-	my @out = ();
-	printer_inner($id, \@out, $_[0]);
-}
 
 sub do_single_word {
 	my $word = shift;
@@ -193,5 +163,6 @@ while(<STDIN>) {
 			push @out, \@tmp;
 		}
 	}
-	printer($id, \@out);
+	my ($rid, $ign) = split/\-/, $id;
+	print STDOUT $JSON->encode({$rid => \@out});
 }
