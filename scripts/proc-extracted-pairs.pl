@@ -9,8 +9,6 @@ use Text::Aspell;
 my $speller = Text::Aspell->new;
 die unless $speller;
 $speller->set_option('lang', 'pl');
-use JSON;
-my $JSON = JSON->new;
 
 binmode(STDIN, ":utf8");
 binmode(STDOUT, ":utf8");
