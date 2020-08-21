@@ -4,6 +4,11 @@ use warnings;
 use strict;
 use utf8;
 use Data::Dumper;
+use Text::Aspell;
+
+my $speller = Text::Aspell->new;
+die unless $speller;
+$speller->set_option('lang', 'pl');
 
 binmode(STDIN, ":utf8");
 binmode(STDOUT, ":utf8");
@@ -157,14 +162,13 @@ sub do_single_word {
 	for my $i (keys %missing_pfx) {
 		push @unsafe, $i .$word;
 	}
-	my %tmp = ();
-	for my $k (@unsafe) {
-		$tmp{$k} = 1;
+	my %filt = ();
+	for my $i (@unsafe) {
+		if($speller->check($i) || $speller->check(ucfirst($i)) || $speller->check(uc($i))) {
+			$filt{$i} = 1;
+		}
 	}
-	print "PRE: $#ret\n";
-	@ret = keys %tmp;
-	print "POST: $#ret\n";
-	print Dumper(@ret) . "\n";
+	push @ret, keys %filt;
 	return @ret;
 }
 
