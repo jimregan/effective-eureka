@@ -112,6 +112,7 @@ sub printer_inner {
 sub printer {
 	my $id = shift;
 	my @out = ();
+	print Dumper $_[0];
 	printer_inner($id, \@out, $_[0]);
 }
 
