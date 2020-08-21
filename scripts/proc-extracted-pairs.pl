@@ -85,6 +85,26 @@ while(<DATA>) {
 }
 close(DATA);
 
+sub has_space {
+	my $arr = shift;
+	for my $w (@$arr) {
+		if($w =~ / /) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+my $symno = 1;
+my %seen = ();
+sub do_sym {
+	my $word = shift;
+	if(!exists $seen{$word}) {
+		$seen{$word} = $symno;
+		$symno++;
+	}
+}
+
 sub writer {
 	my $id = shift;
 	open(OUTPUT, '>', "$id.txt");
@@ -92,21 +112,38 @@ sub writer {
 	open(OUTSYM, '>', "$id.syms.txt");
 	binmode(OUTSYM, ":utf8");
 	print OUTSYM "<eps> 0\n";
-	my $symno = 1;
-	my %seen = ();
 	my $prev = 0;
 	my $cur = 1;
 	my @arr = @{$_[0]};
+	my $adv = 1;
 	for my $sub (@arr) {
 		for my $word (@$sub) {
-			print OUTPUT "$prev $cur $word $word\n";
-			if(!exists $seen{$word}) {
-				$seen{$word} = $symno;
-				$symno++;
+			if(has_space($sub)) {
+				$adv = ($#$sub + 1);
+				if($word =~ / /) {
+					my @tmpsplit = split/ /, $word;
+					my $ccur = $cur;
+					my $cprev = $prev;
+					for (my $i = 0; $i <= $#tmpsplit; $i++) {
+						print OUTPUT "$cprev $ccur $tmpsplit[$i] $tmpsplit[$i]\n";
+						if($i < $#tmpsplit) {
+							$cprev++;
+							$ccur++;
+						}
+					}
+				} else {
+					my $ccur = $cur + 1;
+					print OUTPUT "$prev $ccur $word $word\n";
+					do_sym($word);
+				}
+			} else {
+				$adv = 1;
+				print OUTPUT "$prev $cur $word $word\n";
+				do_sym($word);
 			}
 		}
+		$cur += $adv;
 		$prev++;
-		$cur++;
 	}
 	print OUTPUT "$prev\n";
 	for my $k (keys %seen) {
