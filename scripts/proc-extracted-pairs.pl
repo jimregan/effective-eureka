@@ -77,8 +77,6 @@ while(<DATA>) {
 
 }
 close(DATA);
-print Dumper(%other_spaced);
-exit;
 
 sub printer_inner {
 	my $id = shift;
@@ -112,12 +110,72 @@ sub printer {
 	printer_inner($id, \@out, $_[0]);
 }
 
-while(<>) {
+sub do_single_word {
+	my $word = shift;
+	my @ret = ();
+	push @ret, $word;
+	if(exists $homophones{$word}) {
+		for my $i (@{$homophones{$word}}) {
+			push @ret, $i;
+		}
+	}
+	if(exists $other_unspaced{$word}) {
+		for my $i (@{$other_unspaced{$word}}) {
+			push @ret, $i;
+		}
+	}
+	for my $i (keys %vowel_swaps) {
+		if($word =~ /$i$/) {
+			my $base = $word;
+			$base =~ s/$i$//;
+			for my $j (@{$vowel_swaps{$i}}) {
+				push @ret, $base . $j;
+			}
+		}
+	}
+	for my $i (keys %added_sfx) {
+		if($word =~ /$i$/) {
+			my $out = $word;
+			$out =~ s/$i$//;
+			push @ret, $out;
+		}
+	}
+	for my $i (keys %added_pfx) {
+		if($word =~ /^$i/) {
+			my $out = $word;
+			$out =~ s/^$i//;
+			push @ret, $out;
+		}
+	}
+	for my $i (keys %missing_sfx) {
+		push @ret, $word . $i;
+	}
+	for my $i (keys %missing_pfx) {
+		push @ret, $i .$word;
+	}
+	return @ret;
+}
+
+while(<STDIN>) {
 	chomp;
 	my @words = split/ /;
 	my $id = shift @words;
 	my @out = ();
 	for(my $i = 0; $i <= $#words; $i++) {
+		if(exists $other_spaced{$words[$i]} && $i < $#words - 1 && exists $other_spaced{$words[$i]}->{$words[$i+1]}) {
+			my @tmp = ();
+			push @tmp, $words[$i] . ' ' . $words[$i+1];
+			for my $j (@{$other_spaced{$words[$i]}->{$words[$i+1]}}) {
+				push @tmp, $j;
+			}
+			my @tmp2 = do_single_word($words[$i + 1]);
+			my @tmp3 = map { "$words[$i] " . $_ } @tmp2;
+			push @tmp, @tmp3;
+			push @out, \@tmp;
+		} else {
+			my @tmp = do_single_word($words[$i]);
+			push @out, \@tmp;
+		}
 	}
-	#printer($id, \@out);
+	printer($id, \@out);
 }
