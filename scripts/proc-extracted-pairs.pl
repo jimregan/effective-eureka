@@ -85,6 +85,35 @@ while(<DATA>) {
 }
 close(DATA);
 
+sub writer {
+	my $id = shift;
+	open(OUTPUT, '>', "$id.txt");
+	binmode(OUTPUT, ":utf8");
+	open(OUTSYM, '>', "$id.syms.txt");
+	binmode(OUTSYM, ":utf8");
+	print OUTSYM "<eps> 0\n";
+	my $symno = 1;
+	my %seen = ();
+	my $prev = 0;
+	my $cur = 1;
+	my @arr = @{$_[0]};
+	for my $sub (@arr) {
+		for my $word (@$sub) {
+			print OUTPUT "$prev $cur $word $word\n";
+			if(!exists $seen{$word}) {
+				$seen{$word} = $symno;
+				$symno++;
+			}
+		}
+		$prev++;
+		$cur++;
+	}
+	print OUTPUT "$prev\n";
+	for my $k (keys %seen) {
+		print OUTSYM "$k $seen{$k}\n";
+	}
+}
+
 sub do_single_word {
 	my $word = shift;
 	my @ret = ();
@@ -164,5 +193,5 @@ while(<STDIN>) {
 		}
 	}
 	my ($rid, $ign) = split/\-/, $id;
-	print STDOUT $JSON->encode({$rid => \@out});
+	writer($id, \@out);
 }
