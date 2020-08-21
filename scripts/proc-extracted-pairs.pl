@@ -119,7 +119,7 @@ sub writer {
 	for my $sub (@arr) {
 		for my $word (@$sub) {
 			if(has_space($sub)) {
-				$adv = ($#$sub + 1);
+				$adv = $#$sub;
 				if($word =~ / /) {
 					my @tmpsplit = split/ /, $word;
 					my $ccur = $cur;
@@ -142,8 +142,8 @@ sub writer {
 				do_sym($word);
 			}
 		}
-		$cur += $adv;
-		$prev++;
+		$prev += $adv;
+		$cur = $prev + 1;
 	}
 	print OUTPUT "$prev\n";
 	for my $k (keys %seen) {
