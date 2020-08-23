@@ -1,3 +1,4 @@
+Adalbert
 Adolf
 Albrecht
 Aleksander
@@ -15,6 +16,7 @@ Dymitr
 Dytryk
 Edward
 Emeryk
+Ernest
 Ferdynand
 Filip
 Fiodor
