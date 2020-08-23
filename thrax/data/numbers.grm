@@ -1,0 +1,16 @@
+insspace = "".utf8 : " ".utf8;
+delzero = "0".utf8 : "".utf8;
+
+ord_10_90_m_nom = Optimize[StringFile['ord-10-90-m-nom.tsv', 'utf8', 'utf8']];
+ord_10_90_m_gen = Optimize[StringFile['ord-10-90-m-gen.tsv', 'utf8', 'utf8']];
+ord_10_90_m_loc = Optimize[StringFile['ord-10-90-m-loc.tsv', 'utf8', 'utf8']];
+
+ord_20_90_m_nom_nozero = Optimize[StringFile['ord-20-90-m-nom-nozero.tsv', 'utf8', 'utf8']];
+ord_20_90_m_gen_nozero = Optimize[StringFile['ord-20-90-m-gen-nozero.tsv', 'utf8', 'utf8']];
+ord_20_90_m_loc_nozero = Optimize[StringFile['ord-20-90-m-loc-nozero.tsv', 'utf8', 'utf8']];
+
+ord_1_9_m_nom = Optimize[StringFile['ord-1-9-m-nom.tsv', 'utf8', 'utf8']];
+ord_1_9_m_gen = Optimize[StringFile['ord-1-9-m-gen.tsv', 'utf8', 'utf8']];
+ord_1_9_m_loc = Optimize[StringFile['ord-1-9-m-loc.tsv', 'utf8', 'utf8']];
+
+ord_20_99_m_nom = (ord_20_90_m_nom_nozero insspace ord_1_9_m_nom | ord_10_90_m_nom);
