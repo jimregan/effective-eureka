@@ -1,0 +1,12 @@
+import 'alphabet.grm' as a;
+
+sigma_star = a.whole_alphabet*;
+export queens_nom = Optimize[StringFile['queens-nom.txt', 'utf8', 'utf8']];
+f_acc = CDRewrite[
+    ("a".utf8 : "ą".utf8), 
+    "",
+    "[EOS]".utf8,
+    sigma_star];
+queens_nom_to_acc = Optimize[queens_nom @ f_acc];
+export queens_acc = Optimize[Invert[queens_nom_to_acc] @ queens_nom_to_acc];
+export anyword = a.NotSpace+;
