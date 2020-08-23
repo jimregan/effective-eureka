@@ -37,7 +37,7 @@ using thrax::File;
 using thrax::GrmManager;
 using thrax::InputBuffer;
 using thrax::OpenOrDie;
-using thrax::Split;
+using thrax::StringSplit;
 
 typedef StringCompiler<StdArc> Compiler;
 typedef StringPrinter<StdArc> Printer;
@@ -56,8 +56,8 @@ DEFINE_string(testdata, "",
 enum TokenType { SYMBOL = 1, BYTE = 2, UTF8 = 3 };
 
 bool ReadInput(string* s) {
-  cout << "Input string: ";
-  return static_cast<bool>(getline(cin, *s));
+  std::cout << "Input string: ";
+  return static_cast<bool>(getline(std::cin, *s));
 }
 
 bool RewriteOutput(Printer* printer, Transducer* fst,
@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
   const fst::SymbolTable* utf8_symtab = NULL;
   for (InputBuffer ibuf(fp); ibuf.ReadLine(&line);
        /* ReadLine() automatically increments */) {
-    vector<string> fields = Split(line, FLAGS_separator.c_str());
+    std::vector<string> fields = thrax::StringSplit(line, FLAGS_separator.c_str());
     if (fields.size() != 3) continue;
     string rule = fields[0];
     string input = fields[1];
@@ -121,7 +121,7 @@ int main(int argc, char** argv) {
     if (rule.empty() || rule[0] == '#') continue;
     Transducer input_fst, output_fst;
     string test_output;
-    fst::Fst<StdArc>* fst = grm.GetFst(rule);
+    const fst::Fst<StdArc>* fst = grm.GetFst(rule);
     if (!fst) {
       LOG(FATAL) << "grm.GetFst() must be non NULL: " << rule;
     }
@@ -143,7 +143,7 @@ int main(int argc, char** argv) {
       }
     }
     if (!compiler->operator()(input, &input_fst)) {
-      cout << "Unable to parse input string: " << input << endl;
+      std::cout << "Unable to parse input string: " << input << std::endl;
       exit_status = 1;
       continue;
     }
@@ -161,13 +161,13 @@ int main(int argc, char** argv) {
     if (!grm.Rewrite(rule, input_fst, &output_fst) ||
 	!RewriteOutput(printer, &output_fst, &test_output) ||
 	test_output != output) {
-      cout << "Match failed:\t" << line << endl;
-      cout << "Actual:\t" << test_output << endl;
-      cout << "Expected:\t" << output << endl;
+      std::cout << "Match failed:\t" << line << std::endl;
+      std::cout << "Actual:\t" << test_output << std::endl;
+      std::cout << "Expected:\t" << output << std::endl;
       exit_status = 1;
     }
   }
-  if (!exit_status) cout << "PASS" << endl;
+  if (!exit_status) std::cout << "PASS" << std::endl;
 
   delete compiler;
   delete printer;
