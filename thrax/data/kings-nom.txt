@@ -1,8 +1,11 @@
 Adolf
 Albrecht
 Aleksander
+Alfons
 Arnulf
 August
+Aureolus
+Aznar
 Bezprym
 Bolesław
 Dytryk
@@ -11,6 +14,8 @@ Ferdynand
 Filip
 Franciszek
 Fryderyk
+Galindo
+Garcia
 Gunter
 Henryk
 Herman
@@ -29,15 +34,19 @@ Ludwik
 Ludwik Filip
 Maciej
 Maksymilian
+Marcin
 Michał
 Mieszko
 Napoleon
 Otto
 Otton
+Piotr
 Przemysł
+Ramiro
 Robert
 Rudolf
 Ryszard
+Sancho
 Stanisław
 Stefan
 Wacław
