@@ -8,18 +8,22 @@ Arnulf
 August
 Aureolus
 Aznar
+Bela
 Bezprym
 Bolesław
 Dymitr
 Dytryk
 Edward
+Emeryk
 Ferdynand
 Filip
 Fiodor
 Franciszek
+Franciszek Józef
 Fryderyk
 Galindo
 Garcia
+Gejza
 Gunter
 Henryk
 Herman
@@ -32,6 +36,7 @@ Jerzy
 Józef
 Karol
 Kazimierz
+Koloman
 Konrad
 Konstanty
 Konstantyn
@@ -56,6 +61,8 @@ Ramiro
 Robert
 Rudolf
 Ryszard
+Salomon
+Samuel
 Sancho
 Siemion
 Stanisław
