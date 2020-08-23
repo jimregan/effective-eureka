@@ -13,4 +13,10 @@ ord_1_9_m_nom = Optimize[StringFile['ord-1-9-m-nom.tsv', 'utf8', 'utf8']];
 ord_1_9_m_gen = Optimize[StringFile['ord-1-9-m-gen.tsv', 'utf8', 'utf8']];
 ord_1_9_m_loc = Optimize[StringFile['ord-1-9-m-loc.tsv', 'utf8', 'utf8']];
 
-ord_20_99_m_nom = (ord_20_90_m_nom_nozero insspace ord_1_9_m_nom | ord_10_90_m_nom);
+ord_11_19_m_nom = Optimize[StringFile['ord-11-19-m-nom.tsv', 'utf8', 'utf8']];
+ord_11_19_m_gen = Optimize[StringFile['ord-11-19-m-gen.tsv', 'utf8', 'utf8']];
+ord_11_19_m_loc = Optimize[StringFile['ord-11-19-m-loc.tsv', 'utf8', 'utf8']];
+
+export ord_1_99_m_nom = (ord_20_90_m_nom_nozero insspace ord_1_9_m_nom | ord_10_90_m_nom | delzero? ord_1_9_m_nom | ord_11_19_m_nom);
+export ord_1_99_m_gen = (ord_20_90_m_gen_nozero insspace ord_1_9_m_gen | ord_10_90_m_gen | delzero? ord_1_9_m_gen | ord_11_19_m_gen);
+export ord_1_99_m_loc = (ord_20_90_m_loc_nozero insspace ord_1_9_m_loc | ord_10_90_m_loc | delzero? ord_1_9_m_loc | ord_11_19_m_loc);
