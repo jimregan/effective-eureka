@@ -12,6 +12,8 @@ Aznar
 Bela
 Bezprym
 Bolesław
+Borzywoj
+Brzetysław
 Dymitr
 Dytryk
 Edward
@@ -33,6 +35,7 @@ Hugo
 Iwan
 Jakub
 Jan
+Jaromir
 Jarosław
 Jerzy
 Józef
@@ -54,6 +57,7 @@ Michał
 Mieszko
 Mikołaj
 Napoleon
+Oldrzych
 Otto
 Otton
 Paweł
@@ -67,13 +71,18 @@ Salomon
 Samuel
 Sancho
 Siemion
+Sobiesław
+Spitygniew
 Stanisław
 Stefan
 Światosław
+Świętopełk
 Wacław
 Wasyl
 Wilhelm
 Władysław
+Władywoj
+Wratysław
 Wsiewołod
 Zbigniew
 Zygmunt
