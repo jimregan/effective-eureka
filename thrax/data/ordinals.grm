@@ -1,0 +1,29 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
+insspace = "".utf8 : " ".utf8;
+delzero = "0".utf8 : "".utf8;
+
+ord_10_90_m_nom = Optimize[StringFile['ord-10-90-m-nom.tsv', 'utf8', 'utf8']];
+ord_10_90_m_gen = Optimize[StringFile['ord-10-90-m-gen.tsv', 'utf8', 'utf8']];
+ord_10_90_m_loc = Optimize[StringFile['ord-10-90-m-loc.tsv', 'utf8', 'utf8']];
+
+ord_20_90_m_nom_nozero = Optimize[StringFile['ord-20-90-m-nom-nozero.tsv', 'utf8', 'utf8']];
+ord_20_90_m_gen_nozero = Optimize[StringFile['ord-20-90-m-gen-nozero.tsv', 'utf8', 'utf8']];
+ord_20_90_m_loc_nozero = Optimize[StringFile['ord-20-90-m-loc-nozero.tsv', 'utf8', 'utf8']];
+
+ord_1_9_m_nom = Optimize[StringFile['ord-1-9-m-nom.tsv', 'utf8', 'utf8']];
+ord_1_9_m_gen = Optimize[StringFile['ord-1-9-m-gen.tsv', 'utf8', 'utf8']];
+ord_1_9_m_loc = Optimize[StringFile['ord-1-9-m-loc.tsv', 'utf8', 'utf8']];
+
+ord_11_19_m_nom = Optimize[StringFile['ord-11-19-m-nom.tsv', 'utf8', 'utf8']];
+ord_11_19_m_gen = Optimize[StringFile['ord-11-19-m-gen.tsv', 'utf8', 'utf8']];
+ord_11_19_m_loc = Optimize[StringFile['ord-11-19-m-loc.tsv', 'utf8', 'utf8']];
+
+hybrids_ord_1_9_mn_gen = Optimize[StringFile['hybrids_ord_1-9-mn_gen.tsv', 'utf8', 'utf8']];
+
+
+export ord_1_99_m_nom = Optimize[(ord_20_90_m_nom_nozero insspace ord_1_9_m_nom | ord_10_90_m_nom | delzero? ord_1_9_m_nom | ord_11_19_m_nom)];
+export ord_1_99_m_gen = Optimize[(ord_20_90_m_gen_nozero insspace ord_1_9_m_gen | ord_10_90_m_gen | delzero? ord_1_9_m_gen | ord_11_19_m_gen)];
+export ord_1_99_m_loc = Optimize[(ord_20_90_m_loc_nozero insspace ord_1_9_m_loc | ord_10_90_m_loc | delzero? ord_1_9_m_loc | ord_11_19_m_loc)];
+export hybrid_20_99_m_gen = Optimize[(ord_20_90_m_gen_nozero insspace hybrids_ord_1_9_mn_gen | delzero? hybrids_ord_1_9_mn_gen)];
