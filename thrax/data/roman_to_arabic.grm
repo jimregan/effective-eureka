@@ -16,11 +16,11 @@ rta_11_99 = (rta_10_90 | rta_11_19 | rta_20_90_nozero rta_1_9);
 rta_100_999 = (rta_100_900_nozero inszero rta_1_9 | rta_100_900_nozero rta_11_99 | rta_100_900);
 rta_1_999 = (rta_1_99 | rta_100_999);
 rta_x001_x009 = (rta_1000_3000_nozero inszero inszero rta_1_9);
-rta_x011_x019 = (rta_1000_3000_nozero inszero rta_11_19);
+rta_x011_x019 = (rta_1000_3000_nozero inszero rta_11_99);
 rta_x100_x999 = (rta_1000_3000_nozero rta_100_999);
 rta_xx00 = (rta_1000_3000_nozero rta_100_900);
 rta_00 = (rta_xx00 | rta_100_900);
-rta_1_3999 = (rta_00 | rta_xx00 | rta_x100_x999 | rta_x011_x019 | rta_x001_x009 | rta_1_999);
+rta_1_3999 = (rta_1000_3000 | rta_00 | rta_xx00 | rta_x100_x999 | rta_x011_x019 | rta_x001_x009 | rta_1_999);
 export ROMAN_TO_ARABIC = Optimize[rta_1_3999];
 
 #rta_1_999 = (rta_100_900 | rta_1_99 | rta_100_900_nozero rta_1_99);
