@@ -46,3 +46,5 @@ export space = Optimize[
 export NotSpace = Optimize[whole_alphabet - space];
 
 export Alnum = Optimize[Digits | alphabet];
+
+export sigma_star = whole_alphabet*;

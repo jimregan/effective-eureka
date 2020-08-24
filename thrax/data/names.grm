@@ -1,6 +1,5 @@
 import 'alphabet.grm' as a;
 
-sigma_star = a.whole_alphabet*;
 export queens_nom = Optimize[StringFile['queens-nom.txt', 'utf8', 'utf8']];
 
 # np., Joanna -> Joannę
@@ -8,7 +7,7 @@ f_acc = CDRewrite[
     ("a".utf8 : "ę".utf8), 
     "",
     "[EOS]".utf8,
-    sigma_star];
+    a.sigma_star];
 queens_nom_to_acc = Optimize[queens_nom @ f_acc];
 # Joannę -> Joannę
 export queens_acc = Optimize[Invert[queens_nom_to_acc] @ queens_nom_to_acc];
@@ -19,4 +18,3 @@ f_ins = CDRewrite[
     sigma_star];
 queens_nom_to_ins = Optimize[queens_nom @ f_ins];
 export queens_ins = Optimize[Invert[queens_nom_to_ins] @ queens_nom_to_ins];
-export anyword = a.NotSpace+;
