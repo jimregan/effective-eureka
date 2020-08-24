@@ -1,3 +1,4 @@
+# Copyright 2020 Jim O'Regan
 # Apache 2.0
 
 import 'alphabet.grm' as a;
@@ -33,3 +34,4 @@ lower_roman = CDRewrite[
   a.sigma_star];
 
 export roman_to_arabic = Optimize[Invert[Invert[ROMAN_TO_ARABIC] @ lower_roman]];
+export ROMAN_NUMERAL = Optimize[ROMAN_TO_ARABIC | roman_to_arabic];
