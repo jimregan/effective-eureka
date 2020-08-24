@@ -1,0 +1,2 @@
+# Apache 2.0
+export ins_or_keep_space = (" ".utf8 | "".utf8 : " ".utf8);
