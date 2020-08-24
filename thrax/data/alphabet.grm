@@ -1,3 +1,6 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
 export alphabet = Optimize[
     "a".utf8 | "ą".utf8 | "b".utf8 | "c".utf8 | "ć".utf8 | "d".utf8 |
     "e".utf8 | "ę".utf8 | "f".utf8 | "g".utf8 | "h".utf8 | "i".utf8 |
