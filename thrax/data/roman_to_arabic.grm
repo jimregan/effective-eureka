@@ -26,10 +26,10 @@ rta_1_3999 = (rta_1000_3000 | rta_00 | rta_xx00 | rta_x100_x999 | rta_x011_x019 
 export ROMAN_TO_ARABIC = Optimize[rta_1_3999];
 
 lower_roman = CDRewrite[
-  ("I".utf8 : "i".utf8) | ("X".utf8 : "x".utf8) | ("V".utf8 : "v".utf8) |
+  ("I".utf8 : "i".utf8) | ("X".utf8 : "x".utf8) | ("V".utf8 : "v".utf8) | ("D".utf8 : "d".utf8) |
   ("M".utf8 : "m".utf8) | ("C".utf8 : "c".utf8) | ("L".utf8 : "l".utf8),
   "",
   "",
   a.sigma_star];
 
-export roman_to_arabic = Invert[Invert[ROMAN_TO_ARABIC] @ lower_roman];
+export roman_to_arabic = Optimize[Invert[Invert[ROMAN_TO_ARABIC] @ lower_roman]];
