@@ -1,5 +1,7 @@
 # Apache 2.0
 
+import 'alphabet.grm' as a;
+
 inszero = "".utf8 : "0".utf8;
 
 rta_1_9 = Optimize[StringFile['roman-to-arabic-1-9.tsv', 'utf8', 'utf8']];
@@ -23,5 +25,11 @@ rta_00 = (rta_xx00 | rta_100_900);
 rta_1_3999 = (rta_1000_3000 | rta_00 | rta_xx00 | rta_x100_x999 | rta_x011_x019 | rta_x001_x009 | rta_1_999);
 export ROMAN_TO_ARABIC = Optimize[rta_1_3999];
 
-#rta_1_999 = (rta_100_900 | rta_1_99 | rta_100_900_nozero rta_1_99);
-#export rta_1_3999 = (rta_1000_3000 | rta_1000_3000_nozero rta_1_999 | rta_1000_3000_nozero inszero rta_1_99 | rta_1_999);
+lower_roman = CDRewrite[
+  ("I".utf8 : "i".utf8) | ("X".utf8 : "x".utf8) | ("V".utf8 : "v".utf8) |
+  ("M".utf8 : "m".utf8) | ("C".utf8 : "c".utf8) | ("L".utf8 : "l".utf8),
+  "",
+  "",
+  a.sigma_star];
+
+export roman_to_arabic = Invert[Invert[ROMAN_TO_ARABIC] @ lower_roman];
