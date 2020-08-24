@@ -2,3 +2,6 @@ export opening_brace = "{".utf8;
 export closing_brace = "}".utf8;
 export ins_space = "".utf8 : " ".utf8;
 export ins_quote = "".utf8 : "\"".utf8;
+
+del_space = " ".utf8 : "".utf8;
+export del_space_star = del_space*;
