@@ -1,2 +1,4 @@
 # Apache 2.0
 export ins_or_keep_space = (" ".utf8 | "".utf8 : " ".utf8);
+export insspace = "".utf8 : " ".utf8;
+export delzero = "0".utf8 : "".utf8;
