@@ -18,8 +18,7 @@ card_10_90_m_nom = Optimize[StringFile['card-10-90-nom.tsv', 'utf8', 'utf8']];
 card_10_90_m_gen = Optimize[StringFile['card-10-90-gen.tsv', 'utf8', 'utf8']];
 card_10_90_m_ins = Optimize[StringFile['card-10-90-ins.tsv', 'utf8', 'utf8']];
 
-# ordinals need 100-900 cardinals
-export card_100_900_m_nom = Optimize[StringFile['card-100-900-nom.tsv', 'utf8', 'utf8']];
+card_100_900_m_nom = Optimize[StringFile['card-100-900-nom.tsv', 'utf8', 'utf8']];
 card_100_900_m_gen = Optimize[StringFile['card-100-900-gen.tsv', 'utf8', 'utf8']];
 card_100_900_m_ins = Optimize[StringFile['card-100-900-ins.tsv', 'utf8', 'utf8']];
 
@@ -59,7 +58,8 @@ noinc_card_1_99_m_nom = Optimize[(delzero? card_1_9_m_nom | base_card_1_99_m_nom
 noinc_card_1_99_m_gen = Optimize[(delzero? card_1_9_m_gen | base_card_1_99_m_gen)];
 noinc_card_1_99_m_ins = Optimize[(delzero? card_1_9_m_ins | base_card_1_99_m_ins)];
 
-card_100_900_m_nom_nozero = Optimize[Invert[Invert[card_100_900_m_nom] @ nozero]];
+# for use with ordinals
+export card_100_900_m_nom_nozero = Optimize[Invert[Invert[card_100_900_m_nom] @ nozero]];
 card_100_900_m_gen_nozero = Optimize[Invert[Invert[card_100_900_m_gen] @ nozero]];
 card_100_900_m_ins_nozero = Optimize[Invert[Invert[card_100_900_m_ins] @ nozero]];
 
