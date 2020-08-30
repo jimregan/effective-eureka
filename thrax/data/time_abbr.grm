@@ -1,0 +1,13 @@
+godzinie = ("godzinie".utf8 | "godz.".utf8 : "godzinie".utf8);
+
+minut = ("minut".utf8 | "min.".utf8 : "minut".utf8 | "m.".utf8 : "minut".utf8);
+
+dnia = ("dnia".utf8 | "dn.".utf8 : "dnia".utf8);
+dniu = ("dniu".utf8 | "dn.".utf8 : "dniu".utf8);
+
+rok = ("rok".utf8 | "r.".utf8 : "rok".utf8);
+roku = ("roku".utf8 | "r.".utf8 : "roku".utf8);
+
+
+#session_time = "o".utf8 godzinie 
+
