@@ -15,6 +15,6 @@ f_ins = CDRewrite[
     ("a".utf8 : "ą".utf8),
     "",
     "[EOS]".utf8,
-    sigma_star];
+    a.sigma_star];
 queens_nom_to_ins = Optimize[queens_nom @ f_ins];
 export queens_ins = Optimize[Invert[queens_nom_to_ins] @ queens_nom_to_ins];
