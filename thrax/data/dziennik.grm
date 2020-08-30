@@ -1,0 +1,12 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
+export dzienniki_nom = Optimize[StringFile['dzienniki-nom.tsv', 'utf8', 'utf8']];
+
+dz_loc = CDRewrite[
+    ("Dziennik ".utf8 : "Dzienniku ".utf8),
+    "[BOS]",
+    "".utf8,
+    sigma_star];
+dz_nom_to_loc = Optimize[dzienniki_nom @ dz_loc];
+export dzienniki_loc = Optimize[Invert[dz_nom_to_loc] @ dz_nom_to_loc];
