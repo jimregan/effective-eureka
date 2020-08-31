@@ -73,7 +73,7 @@ base_card_1_999_m_gen = (
 base_card_1_999_m_ins = (
 	card_100_900_m_ins |
 	card_100_900_m_ins_nozero insspace inc_card_1_99_m_ins);
-inc_card_1_999_m_nom = Optimize[(delzero inc_card_1_99_m_nom | base_card_1_999_m_nom)];
+export inc_card_1_999_m_nom = Optimize[(delzero inc_card_1_99_m_nom | base_card_1_999_m_nom)];
 inc_card_1_999_m_gen = Optimize[(delzero inc_card_1_99_m_gen | base_card_1_999_m_gen)];
 inc_card_1_999_m_ins = Optimize[(delzero inc_card_1_99_m_ins | base_card_1_999_m_ins)];
 noinc_card_1_999_m_nom = Optimize[(delzero? noinc_card_1_99_m_nom | base_card_1_999_m_nom)];
@@ -89,7 +89,10 @@ digit_2_9 = digit_1_9 - "1";
 units_qnt = ("5" | "6" | "7" | "8" | "9");
 gt10_units_qnt = units_qnt | "1";
 inc_quantity_digits = ("0" "0" units_qnt |
-	digit_1_9 a.dTeens |
+	digit_1_9 "0" "0" |
+	digit_1_9 "0" gt10_units_qnt |
+	a.Digits a.dTeens |
+	a.Digits digit_2_9 "0" |
 	a.Digits digit_2_9 gt10_units_qnt); 
 
 inc_digits_2_99 = Project[inc_card_1_99_m_gen, 'input'] - one_digit;
