@@ -2,6 +2,7 @@
 # Apache 2.0
 
 import 'alphabet.grm' as a;
+import 'utils.grm' as u;
 
 delzero = "0".utf8 : "".utf8;
 insspace = "".utf8 : " ".utf8;
@@ -79,22 +80,37 @@ noinc_card_1_999_m_nom = Optimize[(delzero? noinc_card_1_99_m_nom | base_card_1_
 noinc_card_1_999_m_gen = Optimize[(delzero? noinc_card_1_99_m_gen | base_card_1_999_m_gen)];
 noinc_card_1_999_m_ins = Optimize[(delzero? noinc_card_1_99_m_ins | base_card_1_999_m_ins)];
 
-one_digit = "0"? "1";
+one_digit = ("0"? "0")? "1";
 plural_digits_tens = ("0" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9");
-export inc_plural_digits =  plural_digits_tens ("2" | "3" | "4");
-export inc_nom_thousands_pl = Optimize[inc_plural_digits @ inc_card_1_99_m_nom];
+inc_plural_digits =  a.Digits plural_digits_tens ("2" | "3" | "4");
+inc_nom_thousands_pl = Optimize[inc_plural_digits @ inc_card_1_999_m_nom];
+digit_1_9 = a.Digits - "0";
+digit_2_9 = digit_1_9 - "1";
+units_qnt = ("5" | "6" | "7" | "8" | "9");
+gt10_units_qnt = units_qnt | "1";
+inc_quantity_digits = ("0" "0" units_qnt |
+	digit_1_9 a.dTeens |
+	a.Digits digit_2_9 gt10_units_qnt); 
 
 inc_digits_2_99 = Project[inc_card_1_99_m_gen, 'input'] - one_digit;
-inc_quantity_digits = inc_digits_2_99 - inc_plural_digits;
-inc_nom_thousands_qnt = inc_quantity_digits @  inc_card_1_99_m_nom;
+inc_digits_2_999 = Project[inc_nom_thousands_pl, 'input'] - one_digit;
+export inc_nom_thousands_qnt = inc_quantity_digits @  inc_card_1_999_m_nom;
 either_1000_nom_nozeros = (
 	("1".utf8 : "jeden tysiąc".utf8) |
 	("1".utf8 : "tysiąc".utf8));
 either_1000_nom = either_1000_nom_nozeros ("000".utf8 : "".utf8);
-inc_either_1000_nom = delzero either_1000_nom;
+inc_either_1000_nom = delzero delzero either_1000_nom;
 thousand_zeros_pl = "000".utf8 : " tysiące".utf8;
 thousand_zeros_qnt = "000".utf8 : " tysięcy".utf8;
+thousand_nozeros_pl = "".utf8 : " tysiące".utf8;
+thousand_nozeros_qnt = "".utf8 : " tysięcy".utf8;
 export inc_card_1_99_000_m_nom = (
 	(inc_either_1000_nom) |
 	(inc_nom_thousands_pl thousand_zeros_pl) |
 	(inc_nom_thousands_qnt thousand_zeros_qnt));
+inc_card_1_99_000_m_nom_nozero = inc_card_1_99_000_m_nom @ nozero;
+export inc_card_1_99_999_m_nom = (
+	(u.delfinalzeros[inc_card_1_99_000_m_nom] insspace inc_card_1_999_m_nom) | 
+	("000" : "") inc_card_1_999_m_nom |
+	inc_card_1_99_000_m_nom);
+# card_100_900_m_nom_nozero

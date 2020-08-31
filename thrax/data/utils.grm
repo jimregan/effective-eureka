@@ -27,3 +27,11 @@ func replace_output_suffix[suffix, nom] {
         mod = Optimize[nom_out @ tmp];
         return nom @ mod;
 }
+func delfinalzeros[nums] {
+	nozero = CDRewrite[
+        	("0".utf8 : "".utf8)+,
+       		"",
+       		"[EOS]",
+     		a.sigma_star];
+	return Invert[Invert[nums] @ nozero];
+}
