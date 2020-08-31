@@ -47,7 +47,3 @@ func replace_input_suffix[suffix, nom] {
         mod = Optimize[nom_out @ tmp];
         return Invert[Invert[nom] @ mod];
 }
-
-func delfinalzeros[nums] {
-	return replace_input_suffix[("0".utf8 : "".utf8)+, nums];
-}

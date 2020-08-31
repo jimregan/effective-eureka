@@ -109,8 +109,11 @@ export inc_card_1_99_000_m_nom = (
 	(inc_nom_thousands_pl thousand_zeros_pl) |
 	(inc_nom_thousands_qnt thousand_zeros_qnt));
 inc_card_1_99_000_m_nom_nozero = inc_card_1_99_000_m_nom @ nozero;
+func del_thousand[n] {
+	return u.replace_input_suffix[("000" : ""), n];
+}
 export inc_card_1_99_999_m_nom = (
-	(u.delfinalzeros[inc_card_1_99_000_m_nom] insspace inc_card_1_999_m_nom) | 
+	(del_thousand[inc_card_1_99_000_m_nom] insspace inc_card_1_999_m_nom) |
 	("000" : "") inc_card_1_999_m_nom |
 	inc_card_1_99_000_m_nom);
 # card_100_900_m_nom_nozero
