@@ -27,11 +27,27 @@ func replace_output_suffix[suffix, nom] {
         mod = Optimize[nom_out @ tmp];
         return nom @ mod;
 }
+func replace_input_prefix[prefix, nom] {
+        tmp = CDRewrite[
+                prefix,
+                "[BOS]",
+                "",
+                a.sigma_star];
+        nom_out = Project[nom, 'input'];
+        mod = Optimize[nom_out @ tmp];
+        return Invert[Invert[nom] @ mod];
+}
+func replace_input_suffix[suffix, nom] {
+        tmp = CDRewrite[
+                suffix,
+                "",
+                "[EOS]",
+                a.sigma_star];
+        nom_out = Project[nom, 'input'];
+        mod = Optimize[nom_out @ tmp];
+        return Invert[Invert[nom] @ mod];
+}
+
 func delfinalzeros[nums] {
-	nozero = CDRewrite[
-        	("0".utf8 : "".utf8)+,
-       		"",
-       		"[EOS]",
-     		a.sigma_star];
-	return Invert[Invert[nums] @ nozero];
+	return replace_input_suffix[("0".utf8 : "".utf8)+, nums];
 }
