@@ -1,4 +1,19 @@
+# Copyright 2020 Jim O'Regan
 # Apache 2.0
+
+import 'alphabet.grm' as a;
+
 export ins_or_keep_space = (" ".utf8 | "".utf8 : " ".utf8);
 export insspace = "".utf8 : " ".utf8;
 export delzero = "0".utf8 : "".utf8;
+
+func replace_output_prefix[prefix, nom] {
+        tmp = CDRewrite[
+                prefix,
+                "[BOS]",
+                "",
+                a.sigma_star];
+        nom_out = Project[nom, 'output'];
+        mod = Optimize[nom_out @ tmp];
+        return nom @ mod;
+}
