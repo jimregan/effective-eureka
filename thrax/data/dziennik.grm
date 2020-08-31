@@ -19,4 +19,6 @@ export dzienniki_loc = Optimize[replace_output_prefix[("Dziennik " : "Dzienniku 
 export dzienniki_gen = Optimize[replace_output_prefix[("Dziennik " : "Dziennika "), dzienniki_nom]];
 export dzienniki_dat = Optimize[replace_output_prefix[("Dziennik " : "Dziennikowi "), dzienniki_nom]];
 export dzienniki_ins = Optimize[replace_output_prefix[("Dziennik " : "Dziennikiem "), dzienniki_nom]];
+export dzienniki_acc = dzienniki_nom;
+export dzienniki_voc = dzienniki_loc;
 export dzienniki_all = Optimize[dzienniki_nom | dzienniki_loc | dzienniki_gen | dzienniki_dat | dzienniki_ins];
