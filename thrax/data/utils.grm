@@ -17,3 +17,13 @@ func replace_output_prefix[prefix, nom] {
         mod = Optimize[nom_out @ tmp];
         return nom @ mod;
 }
+func replace_output_suffix[suffix, nom] {
+        tmp = CDRewrite[
+                suffix,
+                "",
+                "[EOS]",
+                a.sigma_star];
+        nom_out = Project[nom, 'output'];
+        mod = Optimize[nom_out @ tmp];
+        return nom @ mod;
+}
