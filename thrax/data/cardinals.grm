@@ -129,6 +129,16 @@ export inc_card_1_999_999_m_nom = Optimize[(
 	(del_thousand[inc_card_1_999_000_m_nom] insspace inc_card_1_999_m_nom) |
 	("000" : "") inc_card_1_999_m_nom |
 	inc_card_1_999_000_m_nom)];
+
+func mkpl[num] {
+	repl = ("ąc".utf8 : "ące".utf8) | ("ion".utf8 : "iony".utf8) | ("ard".utf8 : "ardy".utf8);
+	return u.replace_output_suffix[repl, num];
+}
+func mkqty[num] {
+	repl = ("ąc".utf8 : "ęcy".utf8) | ("ion".utf8 : "ionów".utf8) | ("ard".utf8 : "ardów".utf8);
+	return u.replace_output_suffix[repl, num];
+}
+
 #export card_1_999_999_m_nom = (
 #	(del_thousand[inc_card_1_999_000_m_nom] insspace inc_card_1_999_m_nom) |
 #	(("0"? "0")? "0")? noinc_card_1_999_m_nom |
@@ -141,31 +151,27 @@ export inc_card_1_999_999_m_nom = Optimize[(
 # (e.g.: inc_nom_thousands_pl)
 # qnt: transducer mapping digits to words for 'quantities' (xx5 - xx9)
 # (e.g.: inc_nom_thousands_qnt)
-func gen_next[one, pl, qnt, prev, leading_zeros] {
+func gen_next[one, pl, qnt, prev, one_zeros, leading_zeros, final_zeros] {
 	# inc_either_1000
-	either_one = (("1" : "jeden ") u.I[one] | ("1" : " ") u.I[one]);
-	plrw = CDRewrite[
-		("ąc".utf8 : "ące".utf8) | ("ion".utf8 : "iony".utf8) | ("ard".utf8 : "ardy".utf8),
-		"",
-		"[EOS]",
-		a.sigma_star];	
-	qntrw = CDRewrite[
-		("ąc".utf8 : "ęcy".utf8) | ("ion".utf8 : "ionów".utf8) | ("ard".utf8 : "ardów".utf8),
-		"",
-		"[EOS]",
-		a.sigma_star];	
-	pl_word = Project[one @ plrw, 'output'];
-	qnt_word = Project[one @ qntrw, 'output'];
+	# This is wrong: nothing about leading zero
+	either_one = (("1" : "jeden ") u.I[one] | ("1" : "") u.I[one]);
+	pl_word = mkpl[one];
+	qnt_word = mkqty[one];
 	zeros_pl = u.D["000"] u.I[" "] u.I[pl_word];
 	zeros_qnt = u.D["000"] u.I[" "] u.I[qnt_word];
 	cur_card_1_999 = (
-		(either_one) |
+		(one_zeros either_one u.D[final_zeros]) |
 		(pl zeros_pl) |
 		(qnt zeros_qnt));
-	return Optimize[((del_thousand[cur_card_1_999] u.insspace prev) |
+	ret = Optimize[((del_thousand[cur_card_1_999] u.insspace prev) |
 		(leading_zeros prev) |
 		cur_card_1_999)];
+	return ret;
 }
 
-test = gen_next["tysiąc", inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_card_1_999_m_nom, u.D["000"]];
-dummy = AssertEqual[inc_card_1_999_999_m_nom, test];
+o2z = ("0"? "0")?;
+o3z = (("0"? "0")? "0")?;
+inc_m_nom_1e6 = gen_next["tysiąc".utf8, inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_card_1_999_m_nom, u.D["00"], u.D["000"], "000"];
+noinc_m_nom_1e6 = gen_next["tysiąc".utf8, inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_card_1_999_m_nom, o2z, o3z, "000"];
+export inc_m_nom_1e9 = gen_next["milion", inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_m_nom_1e6, u.D["00"], u.D["000"], "000000"];
+export noinc_m_nom_1e9 = gen_next["milion", inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_m_nom_1e6, o2z, o3z, "000000"];
