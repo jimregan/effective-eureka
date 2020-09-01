@@ -47,3 +47,10 @@ func replace_input_suffix[suffix, nom] {
         mod = Optimize[nom_out @ tmp];
         return Invert[Invert[nom] @ mod];
 }
+func I[expr] {
+	return "" : expr;
+}
+
+func D[expr] {
+	return expr : "";
+}
