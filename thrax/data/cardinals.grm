@@ -5,7 +5,7 @@ import 'alphabet.grm' as a;
 import 'utils.grm' as u;
 
 delzero = "0".utf8 : "".utf8;
-insspace = "".utf8 : " ".utf8;
+insspace = u.insspace;
 
 card_1_9_m_nom = Optimize[StringFile['card-1-9-m-nom.tsv', 'utf8', 'utf8']];
 card_1_9_m_gen = Optimize[StringFile['card-1-9-m-gen.tsv', 'utf8', 'utf8']];
@@ -117,20 +117,55 @@ thousand_zeros_pl = "000".utf8 : " tysiące".utf8;
 thousand_zeros_qnt = "000".utf8 : " tysięcy".utf8;
 thousand_nozeros_pl = "".utf8 : " tysiące".utf8;
 thousand_nozeros_qnt = "".utf8 : " tysięcy".utf8;
-export inc_card_1_99_000_m_nom = (
+export inc_card_1_999_000_m_nom = (
 	(inc_either_1000_nom) |
 	(inc_nom_thousands_pl thousand_zeros_pl) |
 	(inc_nom_thousands_qnt thousand_zeros_qnt));
-inc_card_1_99_000_m_nom_nozero = inc_card_1_99_000_m_nom @ nozero;
+inc_card_1_999_000_m_nom_nozero = inc_card_1_999_000_m_nom @ nozero;
 func del_thousand[n] {
 	return u.replace_input_suffix[("000" : ""), n];
 }
-export inc_card_1_99_999_m_nom = (
-	(del_thousand[inc_card_1_99_000_m_nom] insspace inc_card_1_999_m_nom) |
+export inc_card_1_999_999_m_nom = Optimize[(
+	(del_thousand[inc_card_1_999_000_m_nom] insspace inc_card_1_999_m_nom) |
 	("000" : "") inc_card_1_999_m_nom |
-	inc_card_1_99_000_m_nom);
-export card_1_99_999_m_nom = (
-	(del_thousand[inc_card_1_99_000_m_nom] insspace inc_card_1_999_m_nom) |
-	(("0"? "0")? "0")? noinc_card_1_999_m_nom |
-	noinc_card_1_99_000_m_nom);
+	inc_card_1_999_000_m_nom)];
+#export card_1_999_999_m_nom = (
+#	(del_thousand[inc_card_1_999_000_m_nom] insspace inc_card_1_999_m_nom) |
+#	(("0"? "0")? "0")? noinc_card_1_999_m_nom |
+#	noinc_card_1_999_000_m_nom);
 # card_100_900_m_nom_nozero
+
+# one: an acceptor with the singular form of the word (milion, tysiąc)
+# different from both:
+# pl: transducer mapping digits to words for plurals (xx2, xx3, xx4)
+# (e.g.: inc_nom_thousands_pl)
+# qnt: transducer mapping digits to words for 'quantities' (xx5 - xx9)
+# (e.g.: inc_nom_thousands_qnt)
+func gen_next[one, pl, qnt, prev, leading_zeros] {
+	# inc_either_1000
+	either_one = (("1" : "jeden ") u.I[one] | ("1" : " ") u.I[one]);
+	plrw = CDRewrite[
+		("ąc".utf8 : "ące".utf8) | ("ion".utf8 : "iony".utf8) | ("ard".utf8 : "ardy".utf8),
+		"",
+		"[EOS]",
+		a.sigma_star];	
+	qntrw = CDRewrite[
+		("ąc".utf8 : "ęcy".utf8) | ("ion".utf8 : "ionów".utf8) | ("ard".utf8 : "ardów".utf8),
+		"",
+		"[EOS]",
+		a.sigma_star];	
+	pl_word = Project[one @ plrw, 'output'];
+	qnt_word = Project[one @ qntrw, 'output'];
+	zeros_pl = u.D["000"] u.I[" "] u.I[pl_word];
+	zeros_qnt = u.D["000"] u.I[" "] u.I[qnt_word];
+	cur_card_1_999 = (
+		(either_one) |
+		(pl zeros_pl) |
+		(qnt zeros_qnt));
+	return Optimize[((del_thousand[cur_card_1_999] u.insspace prev) |
+		(leading_zeros prev) |
+		cur_card_1_999)];
+}
+
+test = gen_next["tysiąc", inc_nom_thousands_pl, inc_nom_thousands_qnt, inc_card_1_999_m_nom, u.D["000"]];
+dummy = AssertEqual[inc_card_1_999_999_m_nom, test];
