@@ -83,36 +83,70 @@ while(<DATA>) {
 }
 close(DATA);
 
-sub printer_inner {
-	my $id = shift;
-	my $arr = $_[0];
-	my $expand = $_[1];
-	my @buf = ();
-	if($#{$expand} < 0) {
-		for my $i (@$arr) {
-			print "$id $i\n";
+sub has_space {
+	my $arr = shift;
+	for my $w (@$arr) {
+		if($w =~ / /) {
+			return 1;
 		}
-	} else {
-		my $cur = shift @$expand;
-		if($#$arr < 0) {
-			for my $i (@$cur) {
-				push @buf, $i;
-			}
-		} else {
-			for my $i (@$arr) {
-				for my $j (@$cur) {
-					push @buf, "$i $j";
-				}
-			}
-		}
-		printer_inner($id, \@buf, $expand);
+	}
+	return 0;
+}
+
+my $symno = 1;
+my %seen = ();
+sub do_sym {
+	my $word = shift;
+	if(!exists $seen{$word}) {
+		$seen{$word} = $symno;
+		$symno++;
 	}
 }
 
-sub printer {
+sub writer {
 	my $id = shift;
-	my @out = ();
-	printer_inner($id, \@out, $_[0]);
+	open(OUTPUT, '>', "$id.txt");
+	binmode(OUTPUT, ":utf8");
+	open(OUTSYM, '>', "$id.syms.txt");
+	binmode(OUTSYM, ":utf8");
+	print OUTSYM "<eps> 0\n";
+	my $prev = 0;
+	my $cur = 1;
+	my @arr = @{$_[0]};
+	my $adv = 1;
+	for my $sub (@arr) {
+		for my $word (@$sub) {
+			if(has_space($sub)) {
+				$adv = $#$sub;
+				if($word =~ / /) {
+					my @tmpsplit = split/ /, $word;
+					my $ccur = $cur;
+					my $cprev = $prev;
+					for (my $i = 0; $i <= $#tmpsplit; $i++) {
+						print OUTPUT "$cprev $ccur $tmpsplit[$i] $tmpsplit[$i]\n";
+						if($i < $#tmpsplit) {
+							$cprev++;
+							$ccur++;
+						}
+					}
+				} else {
+					my $ccur = $cur + 1;
+					print OUTPUT "$prev $ccur $word $word\n";
+					do_sym($word);
+				}
+			} else {
+				$adv = 1;
+				print OUTPUT "$prev $cur $word $word\n";
+				do_sym($word);
+			}
+		}
+		$prev += $adv;
+		$cur = $prev + 1;
+	}
+	print OUTPUT "$prev\n";
+	for my $k (keys %seen) {
+		print OUTSYM "$k $seen{$k}\n";
+	}
 }
 
 sub do_single_word {
@@ -193,5 +227,6 @@ while(<STDIN>) {
 			push @out, \@tmp;
 		}
 	}
-	printer($id, \@out);
+	my ($rid, $ign) = split/\-/, $id;
+	writer($id, \@out);
 }
