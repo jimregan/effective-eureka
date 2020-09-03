@@ -37,7 +37,7 @@ while(<IN>) {
 		}
 		my %print = ();
 		$print{$curid} = \%curhyps;
-		print JSON->new->utf8->encode(\%print) . "\n";
+		print JSON->new->utf8->encode(\%print) . ",\n";
 		%curhyps = ();
 		$curid = $base;
 	}
