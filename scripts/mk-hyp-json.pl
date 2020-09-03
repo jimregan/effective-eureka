@@ -39,7 +39,7 @@ while(<IN>) {
 		%curhyps = ();
 		$curid = $base;
 	}
-	$curhyps{"hyp-$hyp"} = { 'text' => join(' ', @parts) }; 
+	$curhyps{"hyp_$hyp"} = { 'text' => join(' ', @parts) }; 
 }
 my %print = ();
 $print{$curid} = \%curhyps;
