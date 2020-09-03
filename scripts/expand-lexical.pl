@@ -76,6 +76,7 @@ sub writer {
 		$cur = $prev + 1;
 	}
 	print OUTPUT "$prev\n";
+	close(OUTPUT);
 }
 
 while(<>) {
@@ -185,4 +186,5 @@ while(<>) {
 		}
 	}
 	writer($id, \@out);
+	close(OUTSYM);
 }

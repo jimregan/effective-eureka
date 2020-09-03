@@ -143,6 +143,7 @@ sub writer {
 		$cur = $prev + 1;
 	}
 	print OUTPUT "$prev\n";
+	close(OUTPUT);
 }
 
 sub do_single_word {
@@ -232,4 +233,5 @@ while(<STDIN>) {
 	}
 	my ($rid, $ign) = split/\-/, $id;
 	writer($id, \@out);
+	close(OUTSYM);
 }
