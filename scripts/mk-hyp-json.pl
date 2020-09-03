@@ -4,7 +4,9 @@ use warnings;
 use strict;
 use utf8;
 use JSON;
+binmode(STDOUT, ":utf8");
 
+print "{\n";
 my %refs = ();
 
 if($#ARGV == 1) {
@@ -48,3 +50,4 @@ if(exists $refs{$curid}) {
 	$curhyps{'ref'} = $refs{$curid};
 }
 print JSON->new->utf8->encode(\%print) . "\n";
+print "}\n";
