@@ -5,7 +5,6 @@ use strict;
 use utf8;
 use JSON;
 
-print "{\n";
 my %refs = ();
 
 if($#ARGV == 1) {
@@ -21,6 +20,7 @@ if($#ARGV == 1) {
 }
 open(IN, '<', $ARGV[0]);
 binmode(IN, ":utf8");
+my %output = ();
 my %curhyps = ();
 my $curid = '';
 while(<IN>) {
@@ -35,9 +35,7 @@ while(<IN>) {
 		if(exists $refs{$curid}) {
 			$curhyps{'ref'} = $refs{$curid};
 		}
-		my %print = ();
-		$print{$curid} = \%curhyps;
-		print JSON->new->utf8->encode(\%print) . ",\n";
+		$output{$curid} = \%curhyps;
 		%curhyps = ();
 		$curid = $base;
 	}
@@ -48,5 +46,5 @@ $print{$curid} = \%curhyps;
 if(exists $refs{$curid}) {
 	$curhyps{'ref'} = $refs{$curid};
 }
-print JSON->new->utf8->encode(\%print) . "\n";
-print "}\n";
+$output{$curid} = \%curhyps;
+print JSON->new->utf8->encode(\%output) . "\n";
