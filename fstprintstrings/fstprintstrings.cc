@@ -14,7 +14,7 @@
 // Author: rws@xoba.com (Richard Sproat)
 
 #include <fst/mutable-fst.h>
-#include <fstprintstrings.h>
+#include "fstprintstrings.h"
 
 DEFINE_bool(use_separator, false, "Use space as a separator");
 DEFINE_bool(print_weight, false, "Print cumulated weight");
