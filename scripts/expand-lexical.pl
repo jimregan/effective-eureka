@@ -34,7 +34,6 @@ sub do_sym {
 		$seen{$word} = $symno;
 		$symno++;
 	}
-	return $seen{$word};
 }
 
 sub writer {
@@ -65,13 +64,13 @@ sub writer {
 					}
 				} else {
 					my $ccur = $cur + 1;
-					my $wsym = do_sym($word);
-					print OUTPUT "$prev $ccur $wsym $wsym\n";
+					print OUTPUT "$prev $ccur $word $word\n";
+					do_sym($word);
 				}
 			} else {
 				$adv = 1;
-				my $wsym = do_sym($word);
-				print OUTPUT "$prev $cur $wsym $wsym\n";
+				print OUTPUT "$prev $cur $word $word\n";
+				do_sym($word);
 			}
 		}
 		$prev += $adv;
