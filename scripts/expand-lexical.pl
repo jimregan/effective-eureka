@@ -28,11 +28,13 @@ sub has_space {
 
 my $symno = 1;
 my %seen = ();
+
 sub do_sym {
 	my $word = shift;
 	if(!exists $seen{$word}) {
 		$seen{$word} = $symno;
 		$symno++;
+		print OUTSYM "$word $seen{$word}\n";
 	}
 }
 
@@ -40,9 +42,6 @@ sub writer {
 	my $id = shift;
 	open(OUTPUT, '>', "$id.txt");
 	binmode(OUTPUT, ":utf8");
-	open(OUTSYM, '>', "$id.syms.txt");
-	binmode(OUTSYM, ":utf8");
-	print OUTSYM "<eps> 0\n";
 	my $prev = 0;
 	my $cur = 1;
 	my @arr = @{$_[0]};
@@ -77,15 +76,17 @@ sub writer {
 		$cur = $prev + 1;
 	}
 	print OUTPUT "$prev\n";
-	for my $k (keys %seen) {
-		print OUTSYM "$k $seen{$k}\n";
-	}
 }
 
 while(<>) {
 	chomp;
 	my @words = split/ /;
 	my $id = shift @words;
+
+	open(OUTSYM, '>', "$id.syms.txt");
+	binmode(OUTSYM, ":utf8");
+	print OUTSYM "<eps> 0\n";
+
 	my @out = ();
 	for(my $i = 0; $i <= $#words; $i++) {
 		if(($words[$i] eq 'w' || $words[$i] eq 'wy') && $i < $#words - 1) {
