@@ -56,7 +56,7 @@ sub writer {
 					my $cprev = $prev;
 					for (my $i = 0; $i <= $#tmpsplit; $i++) {
 						print OUTPUT "$cprev $ccur $tmpsplit[$i] $tmpsplit[$i]\n";
-						dosym($tmpsplit[$i]);
+						do_sym($tmpsplit[$i]);
 						if($i < $#tmpsplit) {
 							$cprev++;
 							$ccur++;
