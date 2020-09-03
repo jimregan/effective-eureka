@@ -4,7 +4,6 @@ use warnings;
 use strict;
 use utf8;
 use JSON;
-binmode(STDOUT, ":utf8");
 
 print "{\n";
 my %refs = ();
