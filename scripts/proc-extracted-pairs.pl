@@ -206,6 +206,8 @@ while(<STDIN>) {
 	chomp;
 	my @words = split/ /;
 	my $id = shift @words;
+        %seen = ();
+        $symno = 1;
 
 	open(OUTSYM, '>', "$id.syms.txt");
 	binmode(OUTSYM, ":utf8");
