@@ -21,4 +21,7 @@ AC_CHECK_HEADER([fst/fst.h], [],
  [AC_MSG_ERROR([fst/fst.h header not found])]
 )
 
+AC_CHECK_LIB([dl], dlopen, [DL_LIBS=-ldl])
+AC_SUBST([DL_LIBS])
+
 AC_OUTPUT
