@@ -42,42 +42,44 @@ sub writer {
 	my $id = shift;
 	open(OUTPUT, '>', "$id.txt");
 	binmode(OUTPUT, ":utf8");
-	my $prev = 0;
+	my @prevb = ();
+	push @prevb, 0;
 	my $cur = 1;
 	my @arr = @{$_[0]};
 	my $adv = 1;
 	for my $sub (@arr) {
+		my %curb = ();
 		for my $word (@$sub) {
-			if(has_space($sub)) {
-				$adv = $#$sub;
-				if($word =~ / /) {
-					my @tmpsplit = split/ /, $word;
-					my $ccur = $cur;
-					my $cprev = $prev;
-					for (my $i = 0; $i <= $#tmpsplit; $i++) {
-						print OUTPUT "$cprev $ccur $tmpsplit[$i] $tmpsplit[$i]\n";
-						do_sym($tmpsplit[$i]);
-						if($i < $#tmpsplit) {
-							$cprev++;
-							$ccur++;
+			for my $prev (@prevb) {
+				if(has_space($sub)) {
+					$adv = $#$sub;
+					if($word =~ / /) {
+						my @tmpsplit = split/ /, $word;
+						my $cprev = $prev;
+						for (my $i = 0; $i <= $#tmpsplit; $i++) {
+							print OUTPUT "$cprev $cur $tmpsplit[$i] $tmpsplit[$i]\n";
+							do_sym($tmpsplit[$i]);
+							$cur++;
 						}
+						$curb{$cur} = 1;
+					} else {
+						print OUTPUT "$prev $cur $word $word\n";
+						do_sym($word);
+						$curb{$cur} = 1;
 					}
 				} else {
-					my $ccur = $cur + 1;
-					print OUTPUT "$prev $cur <eps> <eps>\n";
-					print OUTPUT "$cur $ccur $word $word\n";
+					print OUTPUT "$prev $cur $word $word\n";
 					do_sym($word);
+					$curb{$cur} = 1;
 				}
-			} else {
-				$adv = 1;
-				print OUTPUT "$prev $cur $word $word\n";
-				do_sym($word);
 			}
 		}
-		$prev += $adv;
-		$cur = $prev + 1;
+		@prevb = keys(%curb);
+		$cur++;
 	}
-	print OUTPUT "$prev\n";
+	for my $prev (@prevb) {
+		print OUTPUT "$prev\n";
+	}
 	close(OUTPUT);
 }
 
