@@ -64,7 +64,7 @@ sub writer {
 					}
 				} else {
 					my $ccur = $cur + 1;
-					print OUTPUT "$prev $cur <eps> <eps>\n"
+					print OUTPUT "$prev $cur <eps> <eps>\n";
 					print OUTPUT "$cur $ccur $word $word\n";
 					do_sym($word);
 				}
