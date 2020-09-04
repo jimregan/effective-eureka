@@ -60,6 +60,7 @@ sub writer {
 							print OUTPUT "$cprev $cur $tmpsplit[$i] $tmpsplit[$i]\n";
 							do_sym($tmpsplit[$i]);
 							$cur++;
+							$cprev++;
 						}
 						$curb{$cur} = 1;
 					} else {

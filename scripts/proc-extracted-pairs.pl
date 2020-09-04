@@ -127,6 +127,8 @@ sub writer {
 						for (my $i = 0; $i <= $#tmpsplit; $i++) {
 							print OUTPUT "$cprev $cur $tmpsplit[$i] $tmpsplit[$i]\n";
 							do_sym($tmpsplit[$i]);
+							$cprev++;
+							$cur++;
 						}
 						$curb{$cur} = 1;
 					} else {
