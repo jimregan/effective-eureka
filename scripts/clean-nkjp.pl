@@ -14,6 +14,14 @@ while(<>) {
 	my @tmp = split/ /;
 	my $count = shift @tmp;
 	for(my $i = 0; $i <= $#tmp; $i++) {
+		if($tmp[$i] =~ /http:/) {
+			$tmp[$i] = '<unk>';
+			next;
+		}
+		if($tmp[$i] =~ /^[-]+$/) {
+			$tmp[$i] = '<unk>';
+			next;
+		}
 		$tmp[$i] =~ s/a\x{0328}/ą/g;
 		$tmp[$i] =~ s/e\x{0328}/ę/g;
 		$tmp[$i] =~ s/\x{0328}//g;
@@ -31,8 +39,11 @@ while(<>) {
 		$tmp[$i] =~ s/\x{0094}//g;
 		$tmp[$i] =~ s/\x{008E}//g;
 		$tmp[$i] =~ s/\x{008C}//g;
+		$tmp[$i] =~ s/\x{02D8}//g;
+		$tmp[$i] =~ s/\x{00B8}//g;
 
 		$tmp[$i] =~ s/\x{00ad}//g;
+		$tmp[$i] =~ s/\x{00af}//g;
 		$tmp[$i] =~ s/\x{000a}//g;
 		$tmp[$i] =~ s/\x{0060}//g;
 		$tmp[$i] =~ s/\x{00b4}//g;
