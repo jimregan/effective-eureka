@@ -16,6 +16,19 @@ my %palat = (
 	'ź' => 'z'
 );
 
+my %accept = ();
+my $using_symbols = 0;
+
+if($#ARGV[0]) {
+	$using_symbols = 1;
+	open(SYMTAB, '<', $ARGV[0]);
+	while(<SYMTAB>) {
+		chomp;
+		my @l = split/ /;
+		$accept{$l[0]} = $l[1];
+	}
+}
+
 sub has_space {
 	my $arr = shift;
 	for my $w (@$arr) {
