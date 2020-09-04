@@ -30,12 +30,12 @@ my $symno = 1;
 my %seen = ();
 
 sub do_sym {
-	my $word = shift;
-	if(!exists $seen{$word}) {
-		$seen{$word} = $symno;
-		$symno++;
-		print OUTSYM "$word $seen{$word}\n";
-	}
+#	my $word = shift;
+#	if(!exists $seen{$word}) {
+#		$seen{$word} = $symno;
+#		$symno++;
+#		print OUTSYM "$word $seen{$word}\n";
+#	}
 }
 
 sub writer {
@@ -59,10 +59,14 @@ sub writer {
 						for (my $i = 0; $i <= $#tmpsplit; $i++) {
 							print OUTPUT "$cprev $cur $tmpsplit[$i] $tmpsplit[$i]\n";
 							do_sym($tmpsplit[$i]);
-							$cur++;
-							$cprev++;
+							if($i < $#tmpsplit) {
+								$cprev = $cur;
+								$cur++;
+							} else {
+								$curb{$cur} = 1;
+								$cur++;
+							}
 						}
-						$curb{$cur} = 1;
 					} else {
 						print OUTPUT "$prev $cur $word $word\n";
 						do_sym($word);
@@ -91,9 +95,9 @@ while(<>) {
 	%seen = ();
 	$symno = 1;
 
-	open(OUTSYM, '>', "$id.syms.txt");
-	binmode(OUTSYM, ":utf8");
-	print OUTSYM "<eps> 0\n";
+	#open(OUTSYM, '>', "$id.syms.txt");
+	#binmode(OUTSYM, ":utf8");
+	#print OUTSYM "<eps> 0\n";
 
 	my @out = ();
 	for(my $i = 0; $i <= $#words; $i++) {
@@ -191,5 +195,5 @@ while(<>) {
 		}
 	}
 	writer($id, \@out);
-	close(OUTSYM);
+	#close(OUTSYM);
 }
