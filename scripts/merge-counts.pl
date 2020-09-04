@@ -21,5 +21,6 @@ while(<>) {
 	}
 }
 for my $ngram (keys %ngrams) {
+	next if($ngram eq '');
 	print "$ngram $ngrams{$ngram}\n";
 }
