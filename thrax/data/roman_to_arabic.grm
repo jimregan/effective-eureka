@@ -1,0 +1,37 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
+import 'alphabet.grm' as a;
+
+inszero = "".utf8 : "0".utf8;
+
+rta_1_9 = Optimize[StringFile['roman-to-arabic-1-9.tsv', 'utf8', 'utf8']];
+rta_11_19 = Optimize[StringFile['roman-to-arabic-11-19.tsv', 'utf8', 'utf8']];
+rta_10_90 = Optimize[StringFile['roman-to-arabic-10-90.tsv', 'utf8', 'utf8']];
+rta_20_90_nozero = Optimize[StringFile['roman-to-arabic-20-90-nozero.tsv', 'utf8', 'utf8']];
+rta_100_900 = Optimize[StringFile['roman-to-arabic-100-900.tsv', 'utf8', 'utf8']];
+rta_100_900_nozero = Optimize[StringFile['roman-to-arabic-100-900-nozero.tsv', 'utf8', 'utf8']];
+rta_1000_3000 = Optimize[StringFile['roman-to-arabic-1000-3000.tsv', 'utf8', 'utf8']];
+rta_1000_3000_nozero = Optimize[StringFile['roman-to-arabic-1000-3000-nozero.tsv', 'utf8', 'utf8']];
+
+rta_1_99 = (rta_10_90 | rta_1_9 | rta_11_19 | rta_20_90_nozero rta_1_9);
+rta_11_99 = (rta_10_90 | rta_11_19 | rta_20_90_nozero rta_1_9);
+rta_100_999 = (rta_100_900_nozero inszero rta_1_9 | rta_100_900_nozero rta_11_99 | rta_100_900);
+rta_1_999 = (rta_1_99 | rta_100_999);
+rta_x001_x009 = (rta_1000_3000_nozero inszero inszero rta_1_9);
+rta_x011_x019 = (rta_1000_3000_nozero inszero rta_11_99);
+rta_x100_x999 = (rta_1000_3000_nozero rta_100_999);
+rta_xx00 = (rta_1000_3000_nozero rta_100_900);
+rta_00 = (rta_xx00 | rta_100_900);
+rta_1_3999 = (rta_1000_3000 | rta_00 | rta_xx00 | rta_x100_x999 | rta_x011_x019 | rta_x001_x009 | rta_1_999);
+export ROMAN_TO_ARABIC = Optimize[rta_1_3999];
+
+lower_roman = CDRewrite[
+  ("I".utf8 : "i".utf8) | ("X".utf8 : "x".utf8) | ("V".utf8 : "v".utf8) | ("D".utf8 : "d".utf8) |
+  ("M".utf8 : "m".utf8) | ("C".utf8 : "c".utf8) | ("L".utf8 : "l".utf8),
+  "",
+  "",
+  a.sigma_star];
+
+export roman_to_arabic = Optimize[Invert[Invert[ROMAN_TO_ARABIC] @ lower_roman]];
+export ROMAN_NUMERAL = Optimize[ROMAN_TO_ARABIC | roman_to_arabic];

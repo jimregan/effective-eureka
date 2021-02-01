@@ -1,0 +1,121 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
+import 'alphabet.grm' as a;
+import 'utils.grm' as u;
+
+delzero = "0".utf8 : "".utf8;
+insspace = u.insspace;
+
+card_1_9_m_nom = Optimize[StringFile['card-1-9-m-nom.tsv', 'utf8', 'utf8']];
+card_1_9_m_gen = Optimize[StringFile['card-1-9-m-gen.tsv', 'utf8', 'utf8']];
+card_1_9_m_ins = Optimize[StringFile['card-1-9-m-ins.tsv', 'utf8', 'utf8']];
+
+card_11_19_m_nom = Optimize[StringFile['card-11-19-nom.tsv', 'utf8', 'utf8']];
+card_11_19_m_gen = Optimize[StringFile['card-11-19-gen.tsv', 'utf8', 'utf8']];
+card_11_19_m_ins = Optimize[StringFile['card-11-19-ins.tsv', 'utf8', 'utf8']];
+
+card_10_90_m_nom = Optimize[StringFile['card-10-90-nom.tsv', 'utf8', 'utf8']];
+card_10_90_m_gen = Optimize[StringFile['card-10-90-gen.tsv', 'utf8', 'utf8']];
+card_10_90_m_ins = Optimize[StringFile['card-10-90-ins.tsv', 'utf8', 'utf8']];
+
+card_100_900_m_nom = Optimize[StringFile['card-100-900-nom.tsv', 'utf8', 'utf8']];
+card_100_900_m_gen = Optimize[StringFile['card-100-900-gen.tsv', 'utf8', 'utf8']];
+card_100_900_m_ins = Optimize[StringFile['card-100-900-ins.tsv', 'utf8', 'utf8']];
+
+nozero = CDRewrite[
+	("0".utf8 : "".utf8)+,
+	"",
+	"[EOS]".utf8,
+	a.sigma_star];
+nums_20_90 = Project[card_10_90_m_nom, 'input'] - "10".utf8;
+
+card_20_90_m_nom = nums_20_90 @ card_10_90_m_nom;
+card_20_90_m_nom_nozero = Optimize[Invert[Invert[card_20_90_m_nom] @ nozero]];
+card_20_90_m_gen = nums_20_90 @ card_10_90_m_gen;
+card_20_90_m_gen_nozero = Optimize[Invert[Invert[card_20_90_m_gen] @ nozero]];
+card_20_90_m_ins = nums_20_90 @ card_10_90_m_ins;
+card_20_90_m_ins_nozero = Optimize[Invert[Invert[card_20_90_m_ins] @ nozero]];
+
+export base_card_1_99_m_nom = (
+	card_11_19_m_nom |
+	card_10_90_m_nom |
+	card_20_90_m_nom_nozero insspace card_1_9_m_nom);
+export base_card_1_99_m_gen = (
+	card_11_19_m_gen |
+	card_10_90_m_gen |
+	card_20_90_m_gen_nozero insspace card_1_9_m_gen);
+export base_card_1_99_m_ins = (
+	card_11_19_m_ins |
+	card_10_90_m_ins |
+	card_20_90_m_ins_nozero insspace card_1_9_m_ins);
+# This version for appending to higher (hundreds, etc.)
+# so the 0 before single digits is not optional
+inc_card_1_99_m_nom = Optimize[(delzero card_1_9_m_nom | base_card_1_99_m_nom)];
+inc_card_1_99_m_gen = Optimize[(delzero card_1_9_m_gen | base_card_1_99_m_gen)];
+inc_card_1_99_m_ins = Optimize[(delzero card_1_9_m_ins | base_card_1_99_m_ins)];
+# Non-appending version (1, 01 | 101 etc)
+noinc_card_1_99_m_nom = Optimize[(delzero? card_1_9_m_nom | base_card_1_99_m_nom)];
+noinc_card_1_99_m_gen = Optimize[(delzero? card_1_9_m_gen | base_card_1_99_m_gen)];
+noinc_card_1_99_m_ins = Optimize[(delzero? card_1_9_m_ins | base_card_1_99_m_ins)];
+
+# for use with ordinals
+export card_100_900_m_nom_nozero = Optimize[Invert[Invert[card_100_900_m_nom] @ nozero]];
+card_100_900_m_gen_nozero = Optimize[Invert[Invert[card_100_900_m_gen] @ nozero]];
+card_100_900_m_ins_nozero = Optimize[Invert[Invert[card_100_900_m_ins] @ nozero]];
+
+base_card_1_999_m_nom = (
+	card_100_900_m_nom |
+	card_100_900_m_nom_nozero insspace inc_card_1_99_m_nom);
+base_card_1_999_m_gen = (
+	card_100_900_m_gen |
+	card_100_900_m_gen_nozero insspace inc_card_1_99_m_gen);
+base_card_1_999_m_ins = (
+	card_100_900_m_ins |
+	card_100_900_m_ins_nozero insspace inc_card_1_99_m_ins);
+export inc_card_1_999_m_nom = Optimize[(delzero inc_card_1_99_m_nom | base_card_1_999_m_nom)];
+export inc_card_1_999_m_gen = Optimize[(delzero inc_card_1_99_m_gen | base_card_1_999_m_gen)];
+export inc_card_1_999_m_ins = Optimize[(delzero inc_card_1_99_m_ins | base_card_1_999_m_ins)];
+export noinc_card_1_999_m_nom = Optimize[(delzero? noinc_card_1_99_m_nom | base_card_1_999_m_nom)];
+export noinc_card_1_999_m_gen = Optimize[(delzero? noinc_card_1_99_m_gen | base_card_1_999_m_gen)];
+export noinc_card_1_999_m_ins = Optimize[(delzero? noinc_card_1_99_m_ins | base_card_1_999_m_ins)];
+
+export one_digit = ("0"? "0")? "1";
+export plural_digits_tens = ("0" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9");
+inc_plural_digits =  a.Digits plural_digits_tens ("2" | "3" | "4");
+inc_nom_thousands_pl = Optimize[inc_plural_digits @ inc_card_1_999_m_nom];
+export digit_1_9 = a.Digits - "0";
+export digit_2_9 = digit_1_9 - "1";
+export units_qnt = ("5" | "6" | "7" | "8" | "9");
+export gt10_units_qnt = units_qnt | "1";
+export inc_quantity_digits = ("0" "0" units_qnt |
+	digit_1_9 "0" "0" |
+	digit_1_9 "0" gt10_units_qnt |
+	a.Digits a.dTeens |
+	a.Digits digit_2_9 "0" |
+	a.Digits digit_2_9 gt10_units_qnt);
+export noinc_quantity_digits = (("0"? "0")? units_qnt |
+	digit_1_9 "0" "0" |
+	digit_1_9 "0" gt10_units_qnt |
+	digit_1_9 a.dTeens |
+	digit_1_9 digit_2_9 "0" |
+	digit_1_9 digit_2_9 gt10_units_qnt |
+	"0"? a.dTeens |
+	"0"? digit_2_9 "0" |
+	"0"? digit_2_9 gt10_units_qnt);
+
+export inc_digits_2_99 = Project[inc_card_1_99_m_gen, 'input'] - one_digit;
+export inc_digits_2_999 = Project[inc_nom_thousands_pl, 'input'] - one_digit;
+
+func del_thousand[n] {
+	return u.replace_input_suffix[("000" : ""), n];
+}
+
+func mkpl[num] {
+	repl = ("ąc".utf8 : "ące".utf8) | ("ion".utf8 : "iony".utf8) | ("ard".utf8 : "ardy".utf8);
+	return u.replace_output_suffix[repl, num];
+}
+func mkqty[num] {
+	repl = ("ąc".utf8 : "ęcy".utf8) | ("ion".utf8 : "ionów".utf8) | ("ard".utf8 : "ardów".utf8);
+	return u.replace_output_suffix[repl, num];
+}

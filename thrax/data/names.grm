@@ -1,0 +1,8 @@
+import 'alphabet.grm' as a;
+import 'utils.grm' as u;
+
+export queens_nom = Optimize[StringFile['queens-nom.txt', 'utf8', 'utf8']];
+
+# Joannę -> Joannę
+export queens_acc = Optimize[u.replace_output_suffix[("a".utf8 : "ę".utf8), queens_nom]];
+export queens_ins = Optimize[u.replace_output_suffix[("a".utf8 : "ą".utf8), queens_nom]];

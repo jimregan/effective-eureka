@@ -1,0 +1,15 @@
+# Copyright 2020 Jim O'Regan
+# Apache 2.0
+
+import 'alphabet.grm' as a;
+import 'utils.grm' as u;
+
+export dzienniki_nom = Optimize[StringFile['dzienniki-nom.tsv', 'utf8', 'utf8']];
+
+export dzienniki_loc = Optimize[u.replace_output_prefix[("Dziennik " : "Dzienniku "), dzienniki_nom]];
+export dzienniki_gen = Optimize[u.replace_output_prefix[("Dziennik " : "Dziennika "), dzienniki_nom]];
+export dzienniki_dat = Optimize[u.replace_output_prefix[("Dziennik " : "Dziennikowi "), dzienniki_nom]];
+export dzienniki_ins = Optimize[u.replace_output_prefix[("Dziennik " : "Dziennikiem "), dzienniki_nom]];
+export dzienniki_acc = dzienniki_nom;
+export dzienniki_voc = dzienniki_loc;
+export dzienniki_all = Optimize[dzienniki_nom | dzienniki_loc | dzienniki_gen | dzienniki_dat | dzienniki_ins];

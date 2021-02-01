@@ -1,0 +1,29 @@
+import 'alphabet.grm' as a;
+
+# np., Joanna -> Joannę
+n_f_acc = CDRewrite[
+    ("a".utf8 : "ę".utf8), 
+    "",
+    "[EOS]".utf8,
+    a.sigma_star];
+n_f_ins = CDRewrite[
+    ("a".utf8 : "ą".utf8),
+    "",
+    "[EOS]".utf8,
+    sigma_star];
+n_f_voc = CDRewrite[
+    ("a".utf8 : "o".utf8),
+    "",
+    "[EOS]".utf8,
+    sigma_star];
+
+adj_m_gen = CDRewrite[
+    ("y".utf8 : "ego".utf8) | ("i".utf8 : "iego".utf8),
+    "",
+    "[EOS]".utf8,
+    sigma_star];
+adj_m_dat = CDRewrite[
+    ("y".utf8 : "emu".utf8) | ("i".utf8 : "iemu".utf8),
+    "",
+    "[EOS]".utf8,
+    sigma_star];
